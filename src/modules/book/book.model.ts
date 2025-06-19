@@ -3,11 +3,9 @@ import { IBook } from "./book.interface";
 
 const bookSchema = new Schema<IBook>(
   {
-    title: { type: String, required: true },
-    author: { type: String, required: true },
-    genre: { type: String, required: true },
-    isbn: { type: String, required: true },
-    description: {
+    title: { type: String, required: true, trim: true },
+    author: { type: String, required: true, trim: true },
+    genre: {
       type: String,
       required: true,
       enum: [
@@ -19,8 +17,14 @@ const bookSchema = new Schema<IBook>(
         "FANTASY",
       ],
     },
+    isbn: { type: String, required: true },
+    description: {
+      type: String,
+      required: true,
+    },
     copies: { type: Number, required: true },
     available: { type: Boolean, required: true, default: true },
+    publishYear: { type: Date, required: true },
   },
   {
     timestamps: true,
