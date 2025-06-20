@@ -11,7 +11,26 @@ bookRoutes.post("/add-book", async (req: Req, res: Res) => {
 
     res.status(201).json({
       success: true,
-      message: "Book create successfully",
+      message: "Book created successfully",
+      data: book,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error,
+    });
+  }
+});
+
+//Get books
+
+bookRoutes.get("/", async (req: Req, res: Res) => {
+  try {
+    const book = await Book.find();
+    res.status(200).json({
+      success: true,
+      message: "Books retrieved successfully",
       data: book,
     });
   } catch (error) {

@@ -13,5 +13,5 @@ export interface IBook {
   description?: string;
   copies: number;
   available?: boolean;
-  publishYear: Date;
+  publishYear: number;
 }

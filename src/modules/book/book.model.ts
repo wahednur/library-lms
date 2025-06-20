@@ -24,7 +24,7 @@ const bookSchema = new Schema<IBook>(
     },
     copies: { type: Number, required: true },
     available: { type: Boolean, required: true, default: true },
-    publishYear: { type: Date, required: true },
+    publishYear: { type: Number, required: true },
   },
   {
     timestamps: true,
