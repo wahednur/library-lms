@@ -34,7 +34,7 @@ bookRoutes.get("/", async (req: Req, res: Res, next: NextFunction) => {
       limit = "10",
     } = req.query;
 
-    // Allowable genres
+    //  genre list
     const genreList = [
       "FICTION",
       "NON_FICTION",

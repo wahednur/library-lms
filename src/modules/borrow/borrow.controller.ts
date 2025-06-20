@@ -1,4 +1,8 @@
-import express, { Request as Req, Response as Res } from "express";
+import express, {
+  NextFunction,
+  Request as Req,
+  Response as Res,
+} from "express";
 import { Book } from "../book/book.model";
 import { Borrow } from "./borrow.model";
 
@@ -33,5 +37,56 @@ borrowRoutes.post("/new-borrow", async (req: Req, res: Res) => {
     });
   } catch (error) {
     console.log(error);
+  }
+});
+
+// Aggregate borrow
+borrowRoutes.get("/", async (req: Req, res: Res, next: NextFunction) => {
+  try {
+    const summary = await Borrow.aggregate([
+      {
+        $group: {
+          _id: "$bookId",
+          totalQuantity: { $sum: "$quantity" },
+        },
+      },
+      {
+        $lookup: {
+          from: "books",
+          localField: "_id",
+          foreignField: "_id",
+          as: "bookInfo",
+        },
+      },
+      {
+        $unwind: "$bookInfo",
+      },
+      {
+        $project: {
+          _id: 0,
+          totalQuantity: 1,
+          book: {
+            title: "$bookInfo.title",
+            isbn: "$bookInfo.isbn",
+          },
+        },
+      },
+    ]);
+
+    if (summary.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "No borrow records found",
+        data: [],
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Borrowed books summary retrieved successfully",
+      data: summary,
+    });
+  } catch (error) {
+    next(error);
   }
 });
