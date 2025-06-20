@@ -27,7 +27,56 @@ bookRoutes.post("/add-book", async (req: Req, res: Res, next: NextFunction) => {
 // 2. Get All Books
 bookRoutes.get("/", async (req: Req, res: Res, next: NextFunction) => {
   try {
-    const books = await Book.find();
+    const {
+      filter,
+      sortBy = "createdAt",
+      sort = "asc",
+      limit = "10",
+    } = req.query;
+
+    // Allowable genres
+    const genreList = [
+      "FICTION",
+      "NON_FICTION",
+      "SCIENCE",
+      "HISTORY",
+      "BIOGRAPHY",
+      "FANTASY",
+    ];
+
+    // Validate genre filter
+    if (filter && !genreList.includes(filter as string)) {
+      res.status(400).json({
+        success: false,
+        message: `Invalid genre filter. Allowed genres are: ${genreList.join(
+          ", "
+        )}`,
+      });
+    }
+
+    // Build conditions
+    const conditions: any = {};
+    if (filter) {
+      conditions.genre = filter;
+    }
+
+    // Build sort
+    const sortOptions: any = {};
+    sortOptions[sortBy as string] = sort === "desc" ? -1 : 1;
+
+    // Query DB
+    const books = await Book.find(conditions)
+      .sort(sortOptions)
+      .limit(Number(limit));
+
+    if (books.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Book not found",
+        data: [],
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: "Books retrieved successfully",
