@@ -4,7 +4,7 @@ import { Borrow } from "./borrow.model";
 
 export const borrowRoutes = express.Router();
 
-// create/Add borrow
+// 6. Borrow a Book
 borrowRoutes.post("/new-borrow", async (req: Req, res: Res) => {
   try {
     const { bookId, quantity, dueDate } = req.body;
@@ -16,7 +16,7 @@ borrowRoutes.post("/new-borrow", async (req: Req, res: Res) => {
       res.status(404).json({ success: false, message: "Book not found" });
     }
 
-    // 2️⃣ Quantity Check
+    // Quantity Check
     if (quantity <= 0) {
       res.status(400).json({
         success: false,

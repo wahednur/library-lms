@@ -8,7 +8,7 @@ import { Book } from "./book.model";
 
 export const bookRoutes = express.Router();
 
-// Add a book
+// 1. Create Book
 bookRoutes.post("/add-book", async (req: Req, res: Res, next: NextFunction) => {
   try {
     const payload = req.body;
@@ -24,7 +24,7 @@ bookRoutes.post("/add-book", async (req: Req, res: Res, next: NextFunction) => {
   }
 });
 
-// Get books
+// 2. Get All Books
 bookRoutes.get("/", async (req: Req, res: Res, next: NextFunction) => {
   try {
     const books = await Book.find();
@@ -38,6 +38,7 @@ bookRoutes.get("/", async (req: Req, res: Res, next: NextFunction) => {
   }
 });
 
+// 3. Get Book by ID
 bookRoutes.get("/:bookId", async (req: Req, res: Res, next: NextFunction) => {
   try {
     const bookId = req.params.bookId;
@@ -52,18 +53,38 @@ bookRoutes.get("/:bookId", async (req: Req, res: Res, next: NextFunction) => {
   }
 });
 
-bookRoutes.patch(
+// 4. Update Book
+bookRoutes.put(
   "/update/:bookId",
   async (req: Req, res: Res, next: NextFunction) => {
     try {
       const bookId = req.params.bookId;
       const updateDoc = req.body;
-      const book = await Book.findById(bookId);
+      // const book = await Book.findById(bookId);
       const update = await Book.findByIdAndUpdate(bookId, updateDoc);
       res.status(200).json({
         success: true,
-        message: "Books retrieved successfully",
+        message: "Books updated successfully",
         data: update,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// 5. Delete Book
+bookRoutes.delete(
+  "/delete/:bookId",
+  async (req: Req, res: Res, next: NextFunction) => {
+    try {
+      const bookId = req.params.bookId;
+      const deleted = await Book.findOneAndDelete({ _id: bookId });
+
+      res.status(200).json({
+        success: true,
+        message: "Books deleted successfully",
+        data: deleted,
       });
     } catch (error) {
       next(error);
