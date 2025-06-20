@@ -4,7 +4,7 @@ import { Borrow } from "./borrow.model";
 
 export const borrowRoutes = express.Router();
 
-// Route
+// create/Add borrow
 borrowRoutes.post("/new-borrow", async (req: Req, res: Res) => {
   try {
     const { bookId, quantity, dueDate } = req.body;
