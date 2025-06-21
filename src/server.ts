@@ -5,7 +5,7 @@ import connectDB from "./config/database";
 
 dotenv.config();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 5001;
 const uri = process.env.MONGODB_URI;
 
 app.get("/", (req: Request, res: Response) => {
