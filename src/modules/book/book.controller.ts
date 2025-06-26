@@ -9,7 +9,7 @@ import { Book } from "./book.model";
 export const bookRoutes = express.Router();
 
 // 1. Create Book
-bookRoutes.post("/add-book", async (req: Req, res: Res, next: NextFunction) => {
+bookRoutes.post("/", async (req: Req, res: Res, next: NextFunction) => {
   try {
     const payload = req.body;
     const book = await Book.create(payload);
@@ -103,31 +103,35 @@ bookRoutes.get("/:bookId", async (req: Req, res: Res, next: NextFunction) => {
 });
 
 // 4. Update Book
-bookRoutes.put(
-  "/update/:bookId",
-  async (req: Req, res: Res, next: NextFunction) => {
-    try {
-      const bookId = req.params.bookId;
-      const updateDoc = req.body;
-      // const book = await Book.findById(bookId);
-      const update = await Book.findByIdAndUpdate(bookId, updateDoc);
-      res.status(200).json({
-        success: true,
-        message: "Books updated successfully",
-        data: update,
-      });
-    } catch (error) {
-      next(error);
-    }
+bookRoutes.put("/:bookId", async (req: Req, res: Res, next: NextFunction) => {
+  try {
+    const bookId = req.params.bookId;
+    const updateDoc = req.body;
+    // const book = await Book.findById(bookId);
+    const update = await Book.findByIdAndUpdate(bookId, updateDoc);
+    res.status(200).json({
+      success: true,
+      message: "Books updated successfully",
+      data: update,
+    });
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 // 5. Delete Book
 bookRoutes.delete(
-  "/delete/:bookId",
+  "/:bookId",
   async (req: Req, res: Res, next: NextFunction) => {
     try {
       const bookId = req.params.bookId;
+      const check = await Book.findById(bookId);
+      if (!check) {
+        res.status(400).json({
+          success: false,
+          message: "Book not found",
+        });
+      }
       const deleted = await Book.findOneAndDelete({ _id: bookId });
 
       res.status(200).json({

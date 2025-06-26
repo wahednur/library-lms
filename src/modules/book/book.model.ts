@@ -32,7 +32,6 @@ const bookSchema = new Schema<IBook>(
       min: [0, "Copies must be a positive number"],
     },
     available: { type: Boolean, required: true, default: true },
-    publishYear: { type: Number, required: true },
   },
   {
     timestamps: true,

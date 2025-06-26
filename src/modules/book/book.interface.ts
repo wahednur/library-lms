@@ -8,10 +8,9 @@ export type IGenre =
 export interface IBook {
   title: string;
   author: string;
-  genre: string;
-  isbn: IGenre;
+  genre: IGenre;
+  isbn: string;
   description?: string;
   copies: number;
   available?: boolean;
-  publishYear: number;
 }
